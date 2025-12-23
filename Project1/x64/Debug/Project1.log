@@ -1,0 +1,23 @@
+﻿  main.cpp
+C:\Users\Пользователь\source\repos\Project1\Project1\TaxpayerWithPropertyDeduction.h(86,53): warning C4244: аргумент: преобразование "double" в "T", возможна потеря данных
+C:\Users\Пользователь\source\repos\Project1\Project1\TaxpayerWithPropertyDeduction.h(86,53): warning C4244:         with
+C:\Users\Пользователь\source\repos\Project1\Project1\TaxpayerWithPropertyDeduction.h(86,53): warning C4244:         [
+C:\Users\Пользователь\source\repos\Project1\Project1\TaxpayerWithPropertyDeduction.h(86,53): warning C4244:             T=int
+C:\Users\Пользователь\source\repos\Project1\Project1\TaxpayerWithPropertyDeduction.h(86,53): warning C4244:         ]
+  (compiling source file 'main.cpp')
+      C:\Users\Пользователь\source\repos\Project1\Project1\TaxpayerWithPropertyDeduction.h(86,53):
+      контекст создания экземпляра шаблона (сначала самый старый)
+          C:\Users\Пользователь\source\repos\Project1\Project1\main.cpp(63,60):
+          выполняется компиляция ссылки на экземпляр класс шаблон функции "TaxpayerWithPropertyDeduction<MoneyWithoutKopecks,13>"
+          C:\Users\Пользователь\source\repos\Project1\Project1\TaxpayerWithPropertyDeduction.h(50,5):
+          во время компиляции функции-члена класс шаблон "TaxpayerWithPropertyDeduction<MoneyWithoutKopecks,13>::TaxpayerWithPropertyDeduction(const char *,int,MoneyType,MoneyType,MoneyType)"
+          with
+          [
+              MoneyType=MoneyWithoutKopecks
+          ]
+              C:\Users\Пользователь\source\repos\Project1\Project1\main.cpp(63,76):
+              см. первую ссылку на "TaxpayerWithPropertyDeduction<MoneyWithoutKopecks,13>::TaxpayerWithPropertyDeduction" в "demonstrateTaxpayerWithDeductionTemplates"
+          C:\Users\Пользователь\source\repos\Project1\Project1\TaxpayerWithPropertyDeduction.h(84,81):
+          во время компиляции функции-члена класс шаблон "void TaxpayerWithPropertyDeduction<MoneyWithoutKopecks,13>::calculateDeduction(void)"
+  
+  Project1.vcxproj -> C:\Users\Пользователь\source\repos\Project1\x64\Debug\Project1.exe

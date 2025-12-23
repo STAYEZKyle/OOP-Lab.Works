@@ -128,11 +128,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Taxpayer.cpp" />
-    <ClCompile Include="TaxpayerWithPropertyDeduction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ITaxable.h" />
+    <ClInclude Include="Money.h" />
     <ClInclude Include="Taxpayer.h" />
     <ClInclude Include="TaxpayerWithPropertyDeduction.h" />
   </ItemGroup>

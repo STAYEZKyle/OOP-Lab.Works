@@ -5,6 +5,7 @@
 #include <memory>
 #include <cstdlib>
 #include <ctime>
+#include "Money.h"
 #include "Taxpayer.h"
 #include "TaxpayerWithPropertyDeduction.h"
 
@@ -15,27 +16,134 @@ void clearInputBuffer() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
-void demonstratePolymorphism() {
-    cout << "\n=== Демонстрация полиморфизма (массив указателей) ===" << endl;
+void demonstrateTemplates() {
+    cout << "\n=== Демонстрация шаблонов (с копейками и без копеек) ===" << endl;
+
+ 
+    Taxpayer<MoneyWithKopecks, 13> taxpayerWithKopecks("123456789012", 2024,
+        MoneyWithKopecks(500000.75),
+        MoneyWithKopecks(100000.25));
+
+    Taxpayer<MoneyWithoutKopecks, 13> taxpayerWithoutKopecks("987654321098", 2024,
+        MoneyWithoutKopecks(500000),
+        MoneyWithoutKopecks(100000));
+
+    cout << "\n--- Налогоплательщик с копейками ---" << endl;
+    taxpayerWithKopecks.printInfo();
+
+    cout << "\n--- Налогоплательщик без копеек ---" << endl;
+    taxpayerWithoutKopecks.printInfo();
+
+
+    cout << "\n--- Добавление дохода с копейками ---" << endl;
+    taxpayerWithKopecks.addIncome(MoneyWithKopecks(15000.50), true);
+    taxpayerWithKopecks.printTaxInfo();
+
+
+    cout << "\n--- Добавление дохода без копеек ---" << endl;
+    taxpayerWithoutKopecks.addIncome(MoneyWithoutKopecks(15000), true);
+    taxpayerWithoutKopecks.printTaxInfo();
+
+  
+    cout << "\n--- Использование оператора >> ---" << endl;
+    taxpayerWithKopecks >> MoneyWithKopecks(8700.0);
+    taxpayerWithKopecks.printTaxInfo();
+}
+
+void demonstrateTaxpayerWithDeductionTemplates() {
+    cout << "\n=== Демонстрация производного класса с шаблонами ===" << endl;
+
+   
+    TaxpayerWithPropertyDeduction<MoneyWithKopecks, 13> tpWithKopecks(
+        "111111111111", 2024,
+        MoneyWithKopecks(1000000.50),
+        MoneyWithKopecks(200000.75),
+        MoneyWithKopecks(3000000.25));
+
+    TaxpayerWithPropertyDeduction<MoneyWithoutKopecks, 13> tpWithoutKopecks(
+        "222222222222", 2024,
+        MoneyWithoutKopecks(1000000),
+        MoneyWithoutKopecks(200000),
+        MoneyWithoutKopecks(3000000));
+
+    cout << "\n--- Налогоплательщик с вычетом (с копейками) ---" << endl;
+    tpWithKopecks.printInfo();
+
+    cout << "\n--- Налогоплательщик с вычетом (без копеек) ---" << endl;
+    tpWithoutKopecks.printInfo();
+
+
+    cout << "\n--- Применение вычета с копейками ---" << endl;
+    tpWithKopecks.applyDeduction(MoneyWithKopecks(50000.50));
+    tpWithKopecks.printInfo();
+
+    cout << "\n--- Применение вычета без копеек ---" << endl;
+    tpWithoutKopecks.applyDeduction(MoneyWithoutKopecks(50000));
+    tpWithoutKopecks.printInfo();
+}
+
+void demonstrateDifferentTaxRates() {
+    cout << "\n=== Демонстрация разных налоговых ставок ===" << endl;
+
+  
+    Taxpayer<MoneyWithKopecks, 13> taxpayer13("333333333333", 2024, MoneyWithKopecks(500000));
+    Taxpayer<MoneyWithKopecks, 15> taxpayer15("444444444444", 2024, MoneyWithKopecks(500000));
+    Taxpayer<MoneyWithKopecks, 20> taxpayer20("555555555555", 2024, MoneyWithKopecks(500000));
+
+    cout << "\n--- Ставка 13% ---" << endl;
+    taxpayer13.printTaxInfo();
+
+    cout << "\n--- Ставка 15% ---" << endl;
+    taxpayer15.printTaxInfo();
+
+    cout << "\n--- Ставка 20% ---" << endl;
+    taxpayer20.printTaxInfo();
+}
+
+void demonstratePolymorphismWithTemplates() {
+    cout << "\n=== Демонстрация полиморфизма с шаблонами ===" << endl;
 
     const int ARRAY_SIZE = 4;
     ITaxable* taxpayers[ARRAY_SIZE];
 
-    taxpayers[0] = new Taxpayer("111111111111", 2024, 500000, 100000);
-    taxpayers[1] = new TaxpayerWithPropertyDeduction("222222222222", 2024, 1000000, 200000, 3000000);
-    taxpayers[2] = new Taxpayer("333333333333", 2024, 300000, 50000);
-    taxpayers[3] = new TaxpayerWithPropertyDeduction("444444444444", 2024, 800000, 150000, 1500000);
+  
+    taxpayers[0] = new Taxpayer<MoneyWithKopecks, 13>("111111111111", 2024,
+        MoneyWithKopecks(500000.75),
+        MoneyWithKopecks(100000.25));
 
-    TaxpayerWithPropertyDeduction* deducible1 = dynamic_cast<TaxpayerWithPropertyDeduction*>(taxpayers[1]);
-    if (deducible1) {
-        deducible1->applyDeduction(100000);
+    taxpayers[1] = new TaxpayerWithPropertyDeduction<MoneyWithKopecks, 13>(
+        "222222222222", 2024,
+        MoneyWithKopecks(1000000.50),
+        MoneyWithKopecks(200000.75),
+        MoneyWithKopecks(3000000.25));
+
+    taxpayers[2] = new Taxpayer<MoneyWithoutKopecks, 13>("333333333333", 2024,
+        MoneyWithoutKopecks(300000),
+        MoneyWithoutKopecks(50000));
+
+    taxpayers[3] = new TaxpayerWithPropertyDeduction<MoneyWithoutKopecks, 13>(
+        "444444444444", 2024,
+        MoneyWithoutKopecks(800000),
+        MoneyWithoutKopecks(150000),
+        MoneyWithoutKopecks(1500000));
+
+
+    for (int i = 0; i < ARRAY_SIZE; i++) {
+        
+        auto deducibleWithKopecks = dynamic_cast<TaxpayerWithPropertyDeduction<MoneyWithKopecks, 13>*>(taxpayers[i]);
+        if (deducibleWithKopecks) {
+            deducibleWithKopecks->applyDeduction(deducibleWithKopecks->getAvailableDeduction() * 0.5);
+            continue;  
+        }
+
+     
+        auto deducibleWithoutKopecks = dynamic_cast<TaxpayerWithPropertyDeduction<MoneyWithoutKopecks, 13>*>(taxpayers[i]);
+        if (deducibleWithoutKopecks) {
+            deducibleWithoutKopecks->applyDeduction(deducibleWithoutKopecks->getAvailableDeduction() * 0.5);
+        }
     }
 
-    TaxpayerWithPropertyDeduction* deducible3 = dynamic_cast<TaxpayerWithPropertyDeduction*>(taxpayers[3]);
-    if (deducible3) {
-        deducible3->applyDeduction(50000);
-    }
-
+  
     cout << "\n=== Налоги, не подлежащие возврату (по всем объектам) ===" << endl;
     double totalNonRefundableTax = 0.0;
 
@@ -48,118 +156,53 @@ void demonstratePolymorphism() {
     cout << "\n=== Итоговая статистика ===" << endl;
     cout << "Общая сумма налогов, не подлежащих возврату: " << totalNonRefundableTax << endl;
 
+  
     for (int i = 0; i < ARRAY_SIZE; i++) {
         delete taxpayers[i];
     }
 }
 
-void demonstrateSmartPointers() {
-    cout << "\n=== Демонстрация работы с вектором умных указателей ===" << endl;
+void interactiveDemo() {
+    cout << "\n=== Интерактивная демонстрация шаблонов ===" << endl;
 
-    vector<unique_ptr<ITaxable>> taxpayerVector;
-
-    taxpayerVector.push_back(make_unique<Taxpayer>("555555555555", 2024, 400000, 80000));
-    taxpayerVector.push_back(make_unique<TaxpayerWithPropertyDeduction>("666666666666", 2024, 1200000, 300000, 2500000));
-    taxpayerVector.push_back(make_unique<Taxpayer>("777777777777", 2024, 250000, 40000));
-    taxpayerVector.push_back(make_unique<TaxpayerWithPropertyDeduction>("888888888888", 2024, 900000, 180000, 1800000));
-
-    for (auto& taxpayer : taxpayerVector) {
-        auto deducible = dynamic_cast<TaxpayerWithPropertyDeduction*>(taxpayer.get());
-        if (deducible) {
-            deducible->applyDeduction(30000 + rand() % 70000);
-        }
-    }
-
-    cout << "\n=== Вывод через интерфейс ITaxable ===" << endl;
-    for (size_t i = 0; i < taxpayerVector.size(); i++) {
-        cout << "\nЭлемент " << i + 1 << ":" << endl;
-        taxpayerVector[i]->printTaxInfo();
-    }
-
-    double total = 0.0;
-    for (const auto& taxpayer : taxpayerVector) {
-        total += taxpayer->getNonRefundableTax();
-    }
-    cout << "\nОбщая сумма не возвращаемых налогов: " << total << endl;
-}
-
-void createTaxpayerCollection() {
-    cout << "\n=== Создание коллекции налогоплательщиков ===" << endl;
-
-    int count;
-    cout << "Сколько налогоплательщиков создать? ";
-    cin >> count;
+    int choice;
+    cout << "Выберите тип денежных сумм:" << endl;
+    cout << "1. С копейками (дробные числа)" << endl;
+    cout << "2. Без копеек (целые числа)" << endl;
+    cout << "Ваш выбор: ";
+    cin >> choice;
     clearInputBuffer();
 
-    if (count <= 0) {
-        cout << "Неверное количество." << endl;
-        return;
+    if (choice == 1) {
+    
+        TaxpayerWithPropertyDeduction<MoneyWithKopecks, 13> taxpayer(
+            "666666666666", 2024,
+            MoneyWithKopecks(1000000.0),
+            MoneyWithKopecks(200000.0),
+            MoneyWithKopecks(2000000.0));
+
+        cout << "\nСоздан налогоплательщик с копейками" << endl;
+        taxpayer.printInfo();
+
+        taxpayer.addIncome(MoneyWithKopecks(50000.75), true);
+        cout << "\nПосле добавления дохода:" << endl;
+        taxpayer.printInfo();
+
     }
+    else if (choice == 2) {
+        TaxpayerWithPropertyDeduction<MoneyWithoutKopecks, 13> taxpayer(
+            "777777777777", 2024,
+            MoneyWithoutKopecks(1000000),
+            MoneyWithoutKopecks(200000),
+            MoneyWithoutKopecks(2000000));
 
-    vector<unique_ptr<Taxpayer>> collection;
+        cout << "\nСоздан налогоплательщик без копеек" << endl;
+        taxpayer.printInfo();
 
-    for (int i = 0; i < count; i++) {
-        cout << "\n=== Налогоплательщик " << i + 1 << " ===" << endl;
-
-        char type;
-        cout << "Тип налогоплательщика (1 - обычный, 2 - с имущественным вычетом): ";
-        cin >> type;
-        clearInputBuffer();
-
-        char inn[13];
-        int year;
-        double taxable_income, non_taxable_income;
-        cout << "Введите ИНН (12 цифр): ";
-        cin.getline(inn, 13);
-
-        cout << "Введите год: ";
-        cin >> year;
-
-        cout << "Введите налогооблагаемый доход: ";
-        cin >> taxable_income;
-
-        cout << "Введите неналогооблагаемый доход: ";
-        cin >> non_taxable_income;
-        clearInputBuffer();
-        if (type == '2') {
-            double property_cost;
-            cout << "Введите стоимость жилья для налогового вычета: ";
-            cin >> property_cost;
-            clearInputBuffer();
-
-            collection.push_back(make_unique<TaxpayerWithPropertyDeduction>(
-                inn, year, taxable_income, non_taxable_income, property_cost));
-        }
-        else {
-            collection.push_back(make_unique<Taxpayer>(
-                inn, year, taxable_income, non_taxable_income));
-        }
+        taxpayer.addIncome(MoneyWithoutKopecks(50000), true);
+        cout << "\nПосле добавления дохода:" << endl;
+        taxpayer.printInfo();
     }
-
-    cout << "\n=== Информация о всех налогоплательщиках ===" << endl;
-    for (size_t i = 0; i < collection.size(); i++) {
-        cout << "\n--- Налогоплательщик " << i + 1 << " ---" << endl;
-        collection[i]->printInfo();
-        collection[i]->printTaxInfo();
-    }
-
-    cout << "\n=== Анализ через интерфейс ITaxable ===" << endl;
-    double totalTax = 0.0;
-    int withDeduction = 0;
-
-    for (const auto& taxpayer : collection) {
-        totalTax += taxpayer->getNonRefundableTax();
-
-        if (dynamic_cast<TaxpayerWithPropertyDeduction*>(taxpayer.get())) {
-            withDeduction++;
-        }
-    }
-
-    cout << "Всего налогоплательщиков: " << collection.size() << endl;
-    cout << "С имущественным вычетом: " << withDeduction << endl;
-    cout << "Без имущественного вычета: " << collection.size() - withDeduction << endl;
-    cout << "Общая сумма налогов, не подлежащих возврату: " << totalTax << endl;
-    cout << "Средний налог на одного налогоплательщика: " << (collection.empty() ? 0 : totalTax / collection.size()) << endl;
 }
 
 int main() {
@@ -167,9 +210,18 @@ int main() {
     srand(static_cast<unsigned>(time(nullptr)));
 
     try {
-        demonstratePolymorphism();
-        demonstrateSmartPointers();
-        createTaxpayerCollection();
+
+        demonstrateTemplates();
+
+        demonstrateTaxpayerWithDeductionTemplates();
+
+        demonstrateDifferentTaxRates();
+
+   
+        demonstratePolymorphismWithTemplates();
+
+   
+        interactiveDemo();
 
         cout << "\nПрограмма завершена." << endl;
 
